@@ -3,80 +3,76 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f5f8f3">
-  <meta name="description" content="ボタンひとつでラジオ体操第一・第二をYouTubeで開く専用ページです。">
-  <title>ラジオ体操 | かんたん再生</title>
+  <meta name="theme-color" content="#f4f8f4">
+  <meta name="description" content="ラジオ体操第一・第二をページ内のYouTube公式プレーヤーで再生します。">
+  <title>ラジオ体操</title>
   <style>
     :root {
       color-scheme: light;
-      --ink: #203026;
-      --muted: #627167;
+      --ink: #1c2b21;
+      --muted: #5c6a60;
       --green: #176b43;
       --green-dark: #105436;
       --blue: #226ba5;
       --blue-dark: #18517e;
-      --paper: #f5f8f3;
-      --line: #dce6dc;
-      --focus: #f2b83d;
+      --paper: #f4f8f4;
+      --focus: #f1b936;
     }
     * { box-sizing: border-box; }
-    html { min-height: 100%; }
+    html, body { margin: 0; min-height: 100%; }
     body {
-      margin: 0;
       min-height: 100vh;
       min-height: 100svh;
-      padding: max(20px, env(safe-area-inset-top)) 20px max(22px, env(safe-area-inset-bottom));
-      background:
-        radial-gradient(ellipse at 50% -15%, #e1f0e3 0, transparent 54%),
-        var(--paper);
-      color: var(--ink);
-      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+      padding: max(20px, env(safe-area-inset-top)) 20px max(20px, env(safe-area-inset-bottom));
       display: flex;
       align-items: center;
       justify-content: center;
+      background: radial-gradient(ellipse at 50% -15%, #e2f0e3 0, transparent 55%), var(--paper);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
     }
-    main { width: min(100%, 900px); margin: 0 auto; }
-    header { text-align: center; margin: 0 auto 28px; }
+    button { font: inherit; }
+    #menu { width: min(100%, 1000px); margin: auto; }
+    header { text-align: center; margin-bottom: clamp(20px, 4vh, 36px); }
     .eyebrow {
       display: inline-block;
       margin-bottom: 10px;
-      padding: 7px 14px;
+      padding: 7px 15px;
       border: 1px solid #cfe0d1;
       border-radius: 999px;
+      background: #ffffffc9;
       color: var(--green-dark);
-      background: #ffffffb8;
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: .04em;
+      font-size: clamp(.85rem, 1.5vw, 1rem);
+      font-weight: 800;
     }
     h1 {
       margin: 0;
-      font-size: clamp(2.3rem, 7vw, 4.4rem);
+      font-size: clamp(2.4rem, 6vw, 4.7rem);
       line-height: 1.15;
       letter-spacing: .04em;
     }
     .lead {
       margin: 12px 0 0;
       color: var(--muted);
-      font-size: clamp(1.05rem, 2.7vw, 1.4rem);
+      font-size: clamp(1.05rem, 2.1vw, 1.4rem);
     }
     .choices {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 20px;
+      gap: clamp(14px, 2.5vw, 24px);
     }
     .choice {
-      min-height: 270px;
+      min-height: clamp(210px, 34vh, 310px);
+      border: 0;
+      border-radius: 26px;
+      padding: clamp(20px, 3vw, 36px);
+      color: white;
+      cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 13px;
-      padding: 24px 18px;
-      border-radius: 28px;
-      color: white;
-      text-align: center;
-      text-decoration: none;
+      gap: 14px;
       box-shadow: 0 10px 24px #183b271c;
       transition: transform .12s ease, box-shadow .12s ease;
       -webkit-tap-highlight-color: transparent;
@@ -85,129 +81,246 @@
     .choice.second { background: linear-gradient(145deg, #3284be, var(--blue-dark)); }
     .choice:hover { transform: translateY(-2px); box-shadow: 0 14px 28px #183b2728; }
     .choice:active { transform: scale(.985); }
-    .choice:focus-visible, .help summary:focus-visible {
-      outline: 5px solid var(--focus);
-      outline-offset: 5px;
-    }
-    .ordinal {
-      font-size: clamp(1.05rem, 2.4vw, 1.35rem);
-      font-weight: 700;
-      opacity: .94;
-    }
-    .choice-title {
-      display: block;
-      font-size: clamp(1.8rem, 4.8vw, 2.65rem);
+    .ordinal { font-size: clamp(1.1rem, 2.5vw, 1.5rem); font-weight: 700; }
+    .choice strong {
+      font-size: clamp(2rem, 4.8vw, 3.4rem);
       line-height: 1.25;
-      font-weight: 800;
-      letter-spacing: .015em;
+      text-align: center;
     }
-    .tap {
-      margin-top: 6px;
-      padding: 12px 22px;
+    .play-label {
+      padding: 11px 24px;
+      border: 1px solid #ffffff70;
       border-radius: 999px;
-      background: #ffffff25;
-      border: 1px solid #ffffff65;
-      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      background: #ffffff22;
+      font-size: clamp(1.05rem, 2vw, 1.3rem);
       font-weight: 800;
     }
-    .youtube-mark {
-      font-size: 13px;
-      font-weight: 700;
-      opacity: .9;
+    .hint {
+      margin: 21px 0 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: clamp(.9rem, 1.5vw, 1.05rem);
+      line-height: 1.6;
     }
-    .cast-note {
+    :focus-visible { outline: 5px solid var(--focus); outline-offset: 5px; }
+
+    /* Playback fills the whole browser viewport. The YouTube player's own
+       fullscreen control remains available for native fullscreen playback. */
+    #playerScreen {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      inset: 0;
+      width: 100vw;
+      width: 100dvw;
+      height: 100vh;
+      height: 100dvh;
+      background: #000;
+      overflow: hidden;
+    }
+    #playerScreen.active { display: block; }
+    #videoFrame {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+    #videoFrame iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #000;
+    }
+    .player-toolbar {
+      position: absolute;
+      z-index: 2;
+      top: max(12px, env(safe-area-inset-top));
+      left: max(12px, env(safe-area-inset-left));
+      right: max(12px, env(safe-area-inset-right));
       display: flex;
-      align-items: flex-start;
+      align-items: center;
+      justify-content: space-between;
       gap: 12px;
-      margin: 24px 0 0;
-      padding: 17px 20px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: #ffffffc9;
-      color: #48584d;
-      font-size: clamp(.95rem, 2vw, 1.05rem);
-      line-height: 1.65;
+      pointer-events: none;
     }
-    .cast-note strong { color: var(--ink); }
-    .cast-icon {
-      flex: 0 0 auto;
-      display: grid;
-      place-items: center;
-      width: 34px;
-      height: 34px;
+    #playingTitle {
+      max-width: 65%;
+      margin: 0;
+      padding: 9px 14px;
+      border-radius: 12px;
+      background: #0009;
+      color: white;
+      font-size: clamp(1rem, 2vw, 1.4rem);
+      font-weight: 800;
+      text-shadow: 0 1px 3px #000;
+    }
+    .toolbar-actions { display: flex; gap: 8px; pointer-events: auto; }
+    .toolbar-button {
+      min-height: 44px;
+      border: 1px solid #ffffff70;
+      border-radius: 12px;
+      padding: 9px 14px;
+      background: #171717d9;
+      color: white;
+      font-weight: 800;
+      font-size: clamp(.9rem, 1.6vw, 1.05rem);
+      cursor: pointer;
+    }
+    .player-help {
+      position: absolute;
+      z-index: 2;
+      bottom: max(10px, env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%);
+      width: max-content;
+      max-width: calc(100% - 24px);
+      padding: 7px 12px;
       border-radius: 10px;
-      background: #e5f1e7;
-      color: var(--green-dark);
-      font-size: 19px;
-      font-weight: 900;
+      background: #0009;
+      color: #fff;
+      text-align: center;
+      font-size: clamp(.75rem, 1.3vw, .95rem);
+      pointer-events: none;
     }
-    .help { margin: 16px 2px 0; color: var(--muted); font-size: .95rem; }
-    .help summary { cursor: pointer; width: fit-content; font-weight: 700; }
-    .help ol { padding-left: 1.5em; line-height: 1.8; }
-    footer { margin-top: 22px; text-align: center; color: #758078; font-size: .82rem; }
-    footer a { color: inherit; }
-    @media (max-width: 620px) {
-      body { align-items: flex-start; padding-top: max(32px, env(safe-area-inset-top)); }
-      header { margin-bottom: 22px; }
-      .choices { grid-template-columns: 1fr; gap: 14px; }
+    @media (max-width: 640px) {
+      body { align-items: flex-start; padding-top: max(30px, env(safe-area-inset-top)); }
+      .choices { grid-template-columns: 1fr; }
       .choice { min-height: 190px; border-radius: 22px; }
-      .cast-note { margin-top: 18px; padding: 14px 15px; }
+      .player-toolbar { align-items: flex-start; }
+      #playingTitle { max-width: 48%; }
+      .toolbar-actions { flex-direction: column; }
+      .toolbar-button { padding: 8px 10px; }
+      .player-help { bottom: max(8px, env(safe-area-inset-bottom)); }
     }
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+      *, *::before, *::after { transition: none !important; }
     }
   </style>
 </head>
 <body>
-  <main>
+  <main id="menu">
     <header>
-      <span class="eyebrow">かんぽ生命公式動画</span>
+      <span class="eyebrow">いつでも かんたん再生</span>
       <h1>ラジオ体操</h1>
-      <p class="lead">見たい体操を押してください</p>
+      <p class="lead">見たい体操を選んでください</p>
     </header>
 
-    <section class="choices" aria-label="体操を選ぶ">
-      <a class="choice first"
-         href="https://www.youtube.com/watch?v=_YZZfaMGEOU"
-         aria-label="ラジオ体操第一をYouTubeで開く">
+    <section class="choices" aria-label="ラジオ体操を選ぶ">
+      <button class="choice first" type="button" data-video="first">
         <span class="ordinal">その1</span>
-        <span class="choice-title">ラジオ体操<br>第一</span>
-        <span class="tap">▶ 再生する</span>
-        <span class="youtube-mark">YouTubeで開きます</span>
-      </a>
-
-      <a class="choice second"
-         href="https://www.youtube.com/watch?v=yi1TbzML2cU"
-         aria-label="ラジオ体操第二をYouTubeで開く">
+        <strong>ラジオ体操<br>第一</strong>
+        <span class="play-label">▶ 再生する</span>
+      </button>
+      <button class="choice second" type="button" data-video="second">
         <span class="ordinal">その2</span>
-        <span class="choice-title">ラジオ体操<br>第二</span>
-        <span class="tap">▶ 再生する</span>
-        <span class="youtube-mark">YouTubeで開きます</span>
-      </a>
+        <strong>ラジオ体操<br>第二</strong>
+        <span class="play-label">▶ 再生する</span>
+      </button>
     </section>
-
-    <aside class="cast-note">
-      <span class="cast-icon" aria-hidden="true">TV</span>
-      <div>
-        <strong>テレビで見るとき</strong><br>
-        動画がYouTubeで開いたら、画面上のキャストアイコンを押して、REGZAを選んでください。
-        iPhoneとテレビを同じWi-Fiにつないでください。
-      </div>
-    </aside>
-
-    <details class="help">
-      <summary>テレビへのつなぎ方を見る</summary>
-      <ol>
-        <li>このページで「第一」または「第二」を押します。</li>
-        <li>YouTubeアプリが開いたら、キャストアイコン（画面にWi-Fiのような印が付いたマーク）を押します。</li>
-        <li>接続先の一覧からREGZAを選びます。</li>
-      </ol>
-      <p>REGZAが一覧に出ないときは、iPhoneとテレビが同じWi-Fiにつながっているか確認してください。</p>
-    </details>
-
-    <footer>
-      動画提供：<a href="https://www.youtube.com/@radiotaisou" target="_blank" rel="noopener">ラジオ体操チャンネル（かんぽ生命公式）</a>
-    </footer>
+    <p class="hint">ボタンを押すと、このページの中で動画が再生されます。</p>
   </main>
+
+  <section id="playerScreen" aria-label="ラジオ体操の動画プレーヤー" aria-hidden="true">
+    <div id="videoFrame"></div>
+    <div class="player-toolbar">
+      <h2 id="playingTitle">ラジオ体操 第一</h2>
+      <div class="toolbar-actions">
+        <button id="fullscreenButton" class="toolbar-button" type="button">⛶ 全画面</button>
+        <button id="backButton" class="toolbar-button" type="button">← メニュー</button>
+      </div>
+    </div>
+    <p class="player-help">再生されないときは、動画中央の ▶ を押してください</p>
+  </section>
+
+  <script>
+    // かんぽ生命公式「ラジオ体操チャンネル」の実演動画
+    const videos = {
+      first:  { title: "ラジオ体操 第一", id: "_YZZfaMGEOU" },
+      second: { title: "ラジオ体操 第二", id: "yi1TbzML2cU" }
+    };
+
+    const menu = document.getElementById("menu");
+    const playerScreen = document.getElementById("playerScreen");
+    const videoFrame = document.getElementById("videoFrame");
+    const playingTitle = document.getElementById("playingTitle");
+    const backButton = document.getElementById("backButton");
+    const fullscreenButton = document.getElementById("fullscreenButton");
+
+    function startVideo(key) {
+      const video = videos[key];
+      if (!video) return;
+
+      // 先に画面を切り替え、選んだ動画をYouTube公式プレーヤー内に読み込む。
+      playingTitle.textContent = video.title;
+      videoFrame.replaceChildren();
+
+      const iframe = document.createElement("iframe");
+      const params = new URLSearchParams({
+        autoplay: "1",
+        playsinline: "0",
+        fs: "1",
+        rel: "0",
+        hl: "ja"
+      });
+      iframe.src = `https://www.youtube.com/embed/${video.id}?${params.toString()}`;
+      iframe.title = video.title;
+      iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+      iframe.allowFullscreen = true;
+      iframe.referrerPolicy = "strict-origin-when-cross-origin";
+      videoFrame.appendChild(iframe);
+
+      menu.hidden = true;
+      playerScreen.classList.add("active");
+      playerScreen.setAttribute("aria-hidden", "false");
+
+      // Fullscreen API対応ブラウザでは、選択操作をきっかけに画面全体を全画面化する。
+      // 非対応（iPhoneの一部Safariなど）の場合も、プレーヤーは画面いっぱいに表示され、
+      // YouTubeプレーヤー内の全画面ボタンが利用できる。
+      requestPageFullscreen();
+    }
+
+    function requestPageFullscreen() {
+      try {
+        if (playerScreen.requestFullscreen) {
+          const result = playerScreen.requestFullscreen();
+          if (result && typeof result.catch === "function") result.catch(() => {});
+        } else if (playerScreen.webkitRequestFullscreen) {
+          playerScreen.webkitRequestFullscreen();
+        }
+      } catch (_) {
+        // CSSの全画面レイアウトとYouTubeプレーヤー内の全画面ボタンをそのまま利用する。
+      }
+    }
+
+    function returnToMenu() {
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      } else if (document.webkitFullscreenElement && document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+      videoFrame.replaceChildren(); // iframeを取り除いて動画を停止
+      playerScreen.classList.remove("active");
+      playerScreen.setAttribute("aria-hidden", "true");
+      menu.hidden = false;
+      const firstButton = document.querySelector('[data-video="first"]');
+      if (firstButton) firstButton.focus();
+    }
+
+    document.querySelectorAll("[data-video]").forEach(button => {
+      button.addEventListener("click", () => startVideo(button.dataset.video));
+    });
+    backButton.addEventListener("click", returnToMenu);
+    fullscreenButton.addEventListener("click", requestPageFullscreen);
+
+    document.addEventListener("keydown", event => {
+      if (!playerScreen.classList.contains("active")) return;
+      if (["Escape", "Backspace", "BrowserBack", "GoBack"].includes(event.key)) {
+        event.preventDefault();
+        returnToMenu();
+      }
+    });
+  </script>
 </body>
 </html>
