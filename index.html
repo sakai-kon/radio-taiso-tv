@@ -23,7 +23,7 @@
     body {
       min-height: 100vh;
       min-height: 100svh;
-      padding: max(20px, env(safe-area-inset-top)) 20px max(20px, env(safe-area-inset-bottom));
+      padding: max(22px, env(safe-area-inset-top)) 22px max(24px, env(safe-area-inset-bottom));
       display: flex;
       align-items: center;
       justify-content: center;
@@ -32,8 +32,8 @@
       font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
     }
     button { font: inherit; }
-    #menu { width: min(100%, 1000px); margin: auto; }
-    header { text-align: center; margin-bottom: clamp(20px, 4vh, 36px); }
+    main { width: min(100%, 1050px); margin: auto; }
+    #menu header { text-align: center; margin-bottom: clamp(20px, 4vh, 36px); }
     .eyebrow {
       display: inline-block;
       margin-bottom: 10px;
@@ -102,97 +102,57 @@
       font-size: clamp(.9rem, 1.5vw, 1.05rem);
       line-height: 1.6;
     }
-    :focus-visible { outline: 5px solid var(--focus); outline-offset: 5px; }
 
-    /* Playback fills the whole browser viewport. The YouTube player's own
-       fullscreen control remains available for native fullscreen playback. */
-    #playerScreen {
+    /* 再生中も通常のページ表示にし、動画の周囲に余白を残す。
+       サイト側の文字やボタンを動画の上に重ねない。 */
+    #playerView {
       display: none;
-      position: fixed;
-      z-index: 10;
-      inset: 0;
-      width: 100vw;
-      width: 100dvw;
-      height: 100vh;
-      height: 100dvh;
-      background: #000;
-      overflow: hidden;
-    }
-    #playerScreen.active { display: block; }
-    #videoFrame {
-      position: absolute;
-      inset: 0;
       width: 100%;
-      height: 100%;
+      padding: clamp(12px, 2.2vw, 26px);
+      border-radius: 24px;
+      background: #ffffff;
+      box-shadow: 0 8px 28px #183b2714;
+    }
+    #playerView.active { display: block; }
+    #videoFrame {
+      width: 100%;
+      max-width: 960px;
+      margin: 0 auto;
+      aspect-ratio: 16 / 9;
       background: #000;
+      border-radius: 14px;
+      overflow: hidden;
     }
     #videoFrame iframe {
       display: block;
       width: 100%;
       height: 100%;
       border: 0;
-      background: #000;
     }
-    .player-toolbar {
-      position: absolute;
-      z-index: 2;
-      top: max(12px, env(safe-area-inset-top));
-      left: max(12px, env(safe-area-inset-left));
-      right: max(12px, env(safe-area-inset-right));
+    .playerFooter {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      pointer-events: none;
+      justify-content: center;
+      padding-top: clamp(14px, 2vw, 22px);
     }
-    #playingTitle {
-      max-width: 65%;
-      margin: 0;
-      padding: 9px 14px;
-      border-radius: 12px;
-      background: #0009;
-      color: white;
-      font-size: clamp(1rem, 2vw, 1.4rem);
+    #backButton {
+      border: 1px solid #cbd9ce;
+      border-radius: 14px;
+      padding: 12px 24px;
+      min-height: 48px;
+      background: #f0f5f0;
+      color: #244331;
+      font-size: clamp(1rem, 1.7vw, 1.2rem);
       font-weight: 800;
-      text-shadow: 0 1px 3px #000;
-    }
-    .toolbar-actions { display: flex; gap: 8px; pointer-events: auto; }
-    .toolbar-button {
-      min-height: 44px;
-      border: 1px solid #ffffff70;
-      border-radius: 12px;
-      padding: 9px 14px;
-      background: #171717d9;
-      color: white;
-      font-weight: 800;
-      font-size: clamp(.9rem, 1.6vw, 1.05rem);
       cursor: pointer;
     }
-    .player-help {
-      position: absolute;
-      z-index: 2;
-      bottom: max(10px, env(safe-area-inset-bottom));
-      left: 50%;
-      transform: translateX(-50%);
-      width: max-content;
-      max-width: calc(100% - 24px);
-      padding: 7px 12px;
-      border-radius: 10px;
-      background: #0009;
-      color: #fff;
-      text-align: center;
-      font-size: clamp(.75rem, 1.3vw, .95rem);
-      pointer-events: none;
-    }
+    #backButton:hover { background: #e5efe6; }
+    :focus-visible { outline: 5px solid var(--focus); outline-offset: 5px; }
     @media (max-width: 640px) {
-      body { align-items: flex-start; padding-top: max(30px, env(safe-area-inset-top)); }
+      body { align-items: flex-start; padding-top: max(28px, env(safe-area-inset-top)); }
       .choices { grid-template-columns: 1fr; }
-      .choice { min-height: 190px; border-radius: 22px; }
-      .player-toolbar { align-items: flex-start; }
-      #playingTitle { max-width: 48%; }
-      .toolbar-actions { flex-direction: column; }
-      .toolbar-button { padding: 8px 10px; }
-      .player-help { bottom: max(8px, env(safe-area-inset-bottom)); }
+      .choice { min-height: 185px; border-radius: 22px; }
+      #playerView { padding: 10px; border-radius: 16px; margin-top: 20px; }
+      #videoFrame { border-radius: 9px; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { transition: none !important; }
@@ -200,110 +160,80 @@
   </style>
 </head>
 <body>
-  <main id="menu">
-    <header>
-      <span class="eyebrow">いつでも かんたん再生</span>
-      <h1>ラジオ体操</h1>
-      <p class="lead">見たい体操を選んでください</p>
-    </header>
+  <main>
+    <section id="menu">
+      <header>
+        <span class="eyebrow">いつでも かんたん再生</span>
+        <h1>ラジオ体操</h1>
+        <p class="lead">見たい体操を選んでください</p>
+      </header>
 
-    <section class="choices" aria-label="ラジオ体操を選ぶ">
-      <button class="choice first" type="button" data-video="first">
-        <span class="ordinal">その1</span>
-        <strong>ラジオ体操<br>第一</strong>
-        <span class="play-label">▶ 再生する</span>
-      </button>
-      <button class="choice second" type="button" data-video="second">
-        <span class="ordinal">その2</span>
-        <strong>ラジオ体操<br>第二</strong>
-        <span class="play-label">▶ 再生する</span>
-      </button>
+      <div class="choices" aria-label="ラジオ体操を選ぶ">
+        <button class="choice first" type="button" data-video="first">
+          <span class="ordinal">その1</span>
+          <strong>ラジオ体操<br>第一</strong>
+          <span class="play-label">▶ 再生する</span>
+        </button>
+        <button class="choice second" type="button" data-video="second">
+          <span class="ordinal">その2</span>
+          <strong>ラジオ体操<br>第二</strong>
+          <span class="play-label">▶ 再生する</span>
+        </button>
+      </div>
+      <p class="hint">見たい体操のボタンを押してください。</p>
     </section>
-    <p class="hint">ボタンを押すと、このページの中で動画が再生されます。</p>
+
+    <section id="playerView" aria-label="動画再生">
+      <div id="videoFrame"></div>
+      <div class="playerFooter">
+        <button id="backButton" type="button">← メニューに戻る</button>
+      </div>
+    </section>
   </main>
 
-  <section id="playerScreen" aria-label="ラジオ体操の動画プレーヤー" aria-hidden="true">
-    <div id="videoFrame"></div>
-    <div class="player-toolbar">
-      <h2 id="playingTitle">ラジオ体操 第一</h2>
-      <div class="toolbar-actions">
-        <button id="fullscreenButton" class="toolbar-button" type="button">⛶ 全画面</button>
-        <button id="backButton" class="toolbar-button" type="button">← メニュー</button>
-      </div>
-    </div>
-    <p class="player-help">再生されないときは、動画中央の ▶ を押してください</p>
-  </section>
-
   <script>
-    // かんぽ生命公式「ラジオ体操チャンネル」の実演動画
+    // かんぽ生命公式「ラジオ体操チャンネル」の動画
     const videos = {
       first:  { title: "ラジオ体操 第一", id: "_YZZfaMGEOU" },
       second: { title: "ラジオ体操 第二", id: "yi1TbzML2cU" }
     };
 
     const menu = document.getElementById("menu");
-    const playerScreen = document.getElementById("playerScreen");
+    const playerView = document.getElementById("playerView");
     const videoFrame = document.getElementById("videoFrame");
-    const playingTitle = document.getElementById("playingTitle");
     const backButton = document.getElementById("backButton");
-    const fullscreenButton = document.getElementById("fullscreenButton");
 
     function startVideo(key) {
       const video = videos[key];
       if (!video) return;
 
-      // 先に画面を切り替え、選んだ動画をYouTube公式プレーヤー内に読み込む。
-      playingTitle.textContent = video.title;
+      // YouTube公式プレーヤーをサイト内に埋め込む。全画面化は自動実行しない。
       videoFrame.replaceChildren();
-
       const iframe = document.createElement("iframe");
       const params = new URLSearchParams({
         autoplay: "1",
-        playsinline: "0",
-        fs: "1",
+        controls: "1",
+        playsinline: "1",
+        fs: "0",
         rel: "0",
         hl: "ja"
       });
-      iframe.src = `https://www.youtube.com/embed/${video.id}?${params.toString()}`;
+      iframe.src = `https://www.youtube-nocookie.com/embed/${video.id}?${params.toString()}`;
       iframe.title = video.title;
-      iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
-      iframe.allowFullscreen = true;
+      iframe.allow = "autoplay; encrypted-media; picture-in-picture";
       iframe.referrerPolicy = "strict-origin-when-cross-origin";
       videoFrame.appendChild(iframe);
 
-      menu.hidden = true;
-      playerScreen.classList.add("active");
-      playerScreen.setAttribute("aria-hidden", "false");
-
-      // Fullscreen API対応ブラウザでは、選択操作をきっかけに画面全体を全画面化する。
-      // 非対応（iPhoneの一部Safariなど）の場合も、プレーヤーは画面いっぱいに表示され、
-      // YouTubeプレーヤー内の全画面ボタンが利用できる。
-      requestPageFullscreen();
-    }
-
-    function requestPageFullscreen() {
-      try {
-        if (playerScreen.requestFullscreen) {
-          const result = playerScreen.requestFullscreen();
-          if (result && typeof result.catch === "function") result.catch(() => {});
-        } else if (playerScreen.webkitRequestFullscreen) {
-          playerScreen.webkitRequestFullscreen();
-        }
-      } catch (_) {
-        // CSSの全画面レイアウトとYouTubeプレーヤー内の全画面ボタンをそのまま利用する。
-      }
+      menu.style.display = "none";
+      playerView.classList.add("active");
+      backButton.focus();
     }
 
     function returnToMenu() {
-      if (document.fullscreenElement && document.exitFullscreen) {
-        document.exitFullscreen().catch(() => {});
-      } else if (document.webkitFullscreenElement && document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      }
-      videoFrame.replaceChildren(); // iframeを取り除いて動画を停止
-      playerScreen.classList.remove("active");
-      playerScreen.setAttribute("aria-hidden", "true");
-      menu.hidden = false;
+      // iframeを削除すると再生も停止する
+      videoFrame.replaceChildren();
+      playerView.classList.remove("active");
+      menu.style.display = "";
       const firstButton = document.querySelector('[data-video="first"]');
       if (firstButton) firstButton.focus();
     }
@@ -312,13 +242,13 @@
       button.addEventListener("click", () => startVideo(button.dataset.video));
     });
     backButton.addEventListener("click", returnToMenu);
-    fullscreenButton.addEventListener("click", requestPageFullscreen);
 
     document.addEventListener("keydown", event => {
-      if (!playerScreen.classList.contains("active")) return;
-      if (["Escape", "Backspace", "BrowserBack", "GoBack"].includes(event.key)) {
-        event.preventDefault();
-        returnToMenu();
+      if (event.key === "Escape" || event.key === "Backspace") {
+        if (playerView.classList.contains("active")) {
+          event.preventDefault();
+          returnToMenu();
+        }
       }
     });
   </script>
