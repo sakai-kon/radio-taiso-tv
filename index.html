@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f8f3">
+  <meta name="description" content="ボタンひとつでラジオ体操第一・第二をYouTubeで開く専用ページです。">
+  <title>ラジオ体操 | かんたん再生</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #203026;
+      --muted: #627167;
+      --green: #176b43;
+      --green-dark: #105436;
+      --blue: #226ba5;
+      --blue-dark: #18517e;
+      --paper: #f5f8f3;
+      --line: #dce6dc;
+      --focus: #f2b83d;
+    }
+    * { box-sizing: border-box; }
+    html { min-height: 100%; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: max(20px, env(safe-area-inset-top)) 20px max(22px, env(safe-area-inset-bottom));
+      background:
+        radial-gradient(ellipse at 50% -15%, #e1f0e3 0, transparent 54%),
+        var(--paper);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    main { width: min(100%, 900px); margin: 0 auto; }
+    header { text-align: center; margin: 0 auto 28px; }
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 7px 14px;
+      border: 1px solid #cfe0d1;
+      border-radius: 999px;
+      color: var(--green-dark);
+      background: #ffffffb8;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(2.3rem, 7vw, 4.4rem);
+      line-height: 1.15;
+      letter-spacing: .04em;
+    }
+    .lead {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 2.7vw, 1.4rem);
+    }
+    .choices {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+    .choice {
+      min-height: 270px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 13px;
+      padding: 24px 18px;
+      border-radius: 28px;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      box-shadow: 0 10px 24px #183b271c;
+      transition: transform .12s ease, box-shadow .12s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .choice.first { background: linear-gradient(145deg, #218653, var(--green-dark)); }
+    .choice.second { background: linear-gradient(145deg, #3284be, var(--blue-dark)); }
+    .choice:hover { transform: translateY(-2px); box-shadow: 0 14px 28px #183b2728; }
+    .choice:active { transform: scale(.985); }
+    .choice:focus-visible, .help summary:focus-visible {
+      outline: 5px solid var(--focus);
+      outline-offset: 5px;
+    }
+    .ordinal {
+      font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+      font-weight: 700;
+      opacity: .94;
+    }
+    .choice-title {
+      display: block;
+      font-size: clamp(1.8rem, 4.8vw, 2.65rem);
+      line-height: 1.25;
+      font-weight: 800;
+      letter-spacing: .015em;
+    }
+    .tap {
+      margin-top: 6px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      background: #ffffff25;
+      border: 1px solid #ffffff65;
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      font-weight: 800;
+    }
+    .youtube-mark {
+      font-size: 13px;
+      font-weight: 700;
+      opacity: .9;
+    }
+    .cast-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin: 24px 0 0;
+      padding: 17px 20px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #ffffffc9;
+      color: #48584d;
+      font-size: clamp(.95rem, 2vw, 1.05rem);
+      line-height: 1.65;
+    }
+    .cast-note strong { color: var(--ink); }
+    .cast-icon {
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: #e5f1e7;
+      color: var(--green-dark);
+      font-size: 19px;
+      font-weight: 900;
+    }
+    .help { margin: 16px 2px 0; color: var(--muted); font-size: .95rem; }
+    .help summary { cursor: pointer; width: fit-content; font-weight: 700; }
+    .help ol { padding-left: 1.5em; line-height: 1.8; }
+    footer { margin-top: 22px; text-align: center; color: #758078; font-size: .82rem; }
+    footer a { color: inherit; }
+    @media (max-width: 620px) {
+      body { align-items: flex-start; padding-top: max(32px, env(safe-area-inset-top)); }
+      header { margin-bottom: 22px; }
+      .choices { grid-template-columns: 1fr; gap: 14px; }
+      .choice { min-height: 190px; border-radius: 22px; }
+      .cast-note { margin-top: 18px; padding: 14px 15px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <span class="eyebrow">かんぽ生命公式動画</span>
+      <h1>ラジオ体操</h1>
+      <p class="lead">見たい体操を押してください</p>
+    </header>
+
+    <section class="choices" aria-label="体操を選ぶ">
+      <a class="choice first"
+         href="https://www.youtube.com/watch?v=_YZZfaMGEOU"
+         aria-label="ラジオ体操第一をYouTubeで開く">
+        <span class="ordinal">その1</span>
+        <span class="choice-title">ラジオ体操<br>第一</span>
+        <span class="tap">▶ 再生する</span>
+        <span class="youtube-mark">YouTubeで開きます</span>
+      </a>
+
+      <a class="choice second"
+         href="https://www.youtube.com/watch?v=yi1TbzML2cU"
+         aria-label="ラジオ体操第二をYouTubeで開く">
+        <span class="ordinal">その2</span>
+        <span class="choice-title">ラジオ体操<br>第二</span>
+        <span class="tap">▶ 再生する</span>
+        <span class="youtube-mark">YouTubeで開きます</span>
+      </a>
+    </section>
+
+    <aside class="cast-note">
+      <span class="cast-icon" aria-hidden="true">TV</span>
+      <div>
+        <strong>テレビで見るとき</strong><br>
+        動画がYouTubeで開いたら、画面上のキャストアイコンを押して、REGZAを選んでください。
+        iPhoneとテレビを同じWi-Fiにつないでください。
+      </div>
+    </aside>
+
+    <details class="help">
+      <summary>テレビへのつなぎ方を見る</summary>
+      <ol>
+        <li>このページで「第一」または「第二」を押します。</li>
+        <li>YouTubeアプリが開いたら、キャストアイコン（画面にWi-Fiのような印が付いたマーク）を押します。</li>
+        <li>接続先の一覧からREGZAを選びます。</li>
+      </ol>
+      <p>REGZAが一覧に出ないときは、iPhoneとテレビが同じWi-Fiにつながっているか確認してください。</p>
+    </details>
+
+    <footer>
+      動画提供：<a href="https://www.youtube.com/@radiotaisou" target="_blank" rel="noopener">ラジオ体操チャンネル（かんぽ生命公式）</a>
+    </footer>
+  </main>
+</body>
+</html>
